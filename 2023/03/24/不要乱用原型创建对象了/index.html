@@ -7,16 +7,24 @@
 <meta name="full-screen" content="yes">
 <meta name="theme-color" content="#317EFB" />
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Kara">
-<meta property="og:url" content="http://example.com/index.html">
+<meta name="description" content="创建对象和生成原型链 的正确打开方式使用语法结构创建的对象123456789101112131415161718192021var o &#x3D; &amp;#123;a: 1&amp;#125;;&#x2F;&#x2F; o 这个对象继承了 Object.prototype 上面的所有属性；&#x2F;&#x2F;因此 o 继承了 Object.prototype 的 hasOwnProperty&#x2F;&#x2F; 原型链如下：&#x2F;&#x2F; o ---&gt; Object.pr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="不要乱用原型创建对象了">
+<meta property="og:url" content="http://example.com/2023/03/24/%E4%B8%8D%E8%A6%81%E4%B9%B1%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E4%BA%86/index.html">
 <meta property="og:site_name" content="Kara">
+<meta property="og:description" content="创建对象和生成原型链 的正确打开方式使用语法结构创建的对象123456789101112131415161718192021var o &#x3D; &amp;#123;a: 1&amp;#125;;&#x2F;&#x2F; o 这个对象继承了 Object.prototype 上面的所有属性；&#x2F;&#x2F;因此 o 继承了 Object.prototype 的 hasOwnProperty&#x2F;&#x2F; 原型链如下：&#x2F;&#x2F; o ---&gt; Object.pr">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-24T07:25:54.855Z">
+<meta property="article:modified_time" content="2023-03-24T07:41:18.256Z">
 <meta property="article:author" content="Kara">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
 
+    <meta name="keywords" content="前端面试 javascript 模块规范">
 
-<title >Kara</title>
+
+<title >不要乱用原型创建对象了</title>
 
 <!-- Favicon -->
 
@@ -58,7 +66,7 @@
 
 <!-- Variable -->
 <script>window.ASYNC_CONFIG = {"hostname":"example.com","author":"Kara","root":"/","typed_text":["一只在追光的攻城狮~","时而奋勇 时而沉静~"],"theme_version":"2.0.4","theme":{"switch":true,"default":"auto"},"favicon":{"logo":"/img/favicon.svg","icon16":"/img/favicon.svg","icon32":"/img/favicon.svg","appleTouchIcon":null,"webmanifest":null,"visibilitychange":true,"hidden":"/failure.ico","showText":"(/≧▽≦/)咦！又好了！","hideText":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms","author":"Post author: ","copyright_link":"Post link: ","copyright_license_title":"Copyright Notice: ","copyright_license_content":"All articles in this blog are licensed under undefined unless otherwise stated.","copy_success":"Copied","copy_failure":"Copy failed","open_read_mode":"Enter reading mode","exit_read_mode":"Exit reading mode","notice_outdate_message":"It has been undefined days since the last update, the content of the article may be outdated.","just":"Just","min":"minutes ago","hour":"hours ago","day":"days ago","month":"months ago"},"swup":false,"plugin":{"flickr_justified_gallery":"https://unpkg.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"far fa-sun","moon":"far fa-moon","play":"fas fa-play","email":"far fa-envelope","next":"fas fa-arrow-right","calendar":"far fa-calendar-alt","clock":"far fa-clock","user":"far fa-user","back_top":"fas fa-arrow-up","close":"fas fa-times","search":"fas fa-search","reward":"fas fa-hand-holding-usd","user_tag":"fas fa-user-alt","toc_tag":"fas fa-th-list","read":"fas fa-book-reader","arrows":"fas fa-arrows-alt-h","double_arrows":"fas fa-angle-double-down","copy":"fas fa-copy"},"icontype":"font","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":true,"title":"default","height_limit":200},"search":{"enable":true,"type":"local","href":"https://www.google.com/search?q=site:","domain":null,"path":"search.xml"}};</script>
-<script id="async-page-config">window.PAGE_CONFIG = {"isPost":false,"isHome":true,"postUpdate":"2023-03-24 16:02:45"};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2023-03-24 15:41:18"};</script>
 
 <!-- Theme mode css -->
 <link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.0.4" id="trm-switch-style">
@@ -146,7 +154,7 @@
     <nav>
         <ul>
             
-            <li class="menu-item-has-children current-menu-item">
+            <li class="menu-item-has-children ">
                 <a  href="/" target="">
                     home
                 </a>
@@ -206,7 +214,8 @@
             <!-- top bar end -->
 
             <!-- body -->
-            <div class="trm-content-start">
+            
+<div class="trm-content-start">
     <!-- banner -->
     <div class="trm-banner" data-scroll data-scroll-direction="vertical">
     
@@ -227,10 +236,10 @@
                     <!-- banner title -->
                     <div class="trm-banner-text ">
                         <div class="trm-label trm-mb-20">
-                            Hi my new friend!
+                            NEWS LETTER
                         </div>
                         <h1 class="trm-mb-30 trm-hsmb-font">
-                            莫愁前路无知己，<br>天下谁人不识君。
+                            不要乱用原型创建对象了
                         </h1>
 
                         
@@ -240,7 +249,7 @@
                                 </li>
                                 <li>
                                     <span>
-                                        index.html
+                                        2023
                                     </span
                                 ></li>
                             </ul>
@@ -374,62 +383,61 @@
                 <div class="trm-content" id="trm-content">
                     <div data-scroll data-scroll-repeat data-scroll-offset="500" id="about-triger"></div>
 
-                    <!-- categories -->
-
-    <div class="row hidden-sm">
-        
-        
-        <div class="col-lg-6">
-            <!-- categories card -->
-<div class="trm-blog-categories trm-scroll-animation" data-scroll data-scroll-offset="40">
-    <h6>
-        Javascript
-        <span class="trm-number">
-            5
-        </span>
-    </h6>
-    <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-    <a href="/categories/Javascript/." class="trm-label">
-        Read More 
-        <i class="iconfont fas fa-arrow-right arrow-right"></i>
-    </a>
-</div>
-<!-- categories card end -->
+                    <div id="post-info" class="row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-calendar-alt trm-icon"></i><br>
+            03/24
         </div>
-        
-        <div class="col-lg-6">
-            <!-- categories card -->
-<div class="trm-blog-categories trm-scroll-animation" data-scroll data-scroll-offset="40">
-    <h6>
-        大前端
-        <span class="trm-number">
-            1
-        </span>
-    </h6>
-    <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-    <a href="/categories/%E5%A4%A7%E5%89%8D%E7%AB%AF/." class="trm-label">
-        Read More 
-        <i class="iconfont fas fa-arrow-right arrow-right"></i>
-    </a>
-</div>
-<!-- categories card end -->
-        </div>
-        
     </div>
-
-<!-- categories end -->
-
-<!-- newest publications -->
-<div class="row">
-    
-        <div class="col-lg-12">
-            <!-- title -->
-            <h5 class="trm-title-with-divider">
-                Newest Publications 
-                <span data-number="01"></span>
-            </h5>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-clock trm-icon"></i><br>
+            15:25
         </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-user trm-icon"></i><br>
+            Kara
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <h2 id="创建对象和生成原型链-的正确打开方式"><a href="#创建对象和生成原型链-的正确打开方式" class="headerlink" title="创建对象和生成原型链 的正确打开方式"></a>创建对象和生成原型链 的正确打开方式</h2><h3 id="使用语法结构创建的对象"><a href="#使用语法结构创建的对象" class="headerlink" title="使用语法结构创建的对象"></a>使用语法结构创建的对象</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;<span class="attr">a</span>: <span class="number">1</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// o 这个对象继承了 Object.prototype 上面的所有属性；</span></span><br><span class="line"><span class="comment">//因此 o 继承了 Object.prototype 的 hasOwnProperty</span></span><br><span class="line"><span class="comment">// 原型链如下：</span></span><br><span class="line"><span class="comment">// o ---&gt; Object.prototype ---&gt; null</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = [<span class="string">&quot;yo&quot;</span>, <span class="string">&quot;whadup&quot;</span>, <span class="string">&quot;?&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数组都继承于 Array.prototype</span></span><br><span class="line"><span class="comment">// 原型链如下：</span></span><br><span class="line"><span class="comment">// a ---&gt; Array.prototype ---&gt; Object.prototype ---&gt; null</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数都继承于 Function.prototype</span></span><br><span class="line"><span class="comment">// (Function.prototype 中包含 call, bind 等方法)</span></span><br><span class="line"><span class="comment">// 原型链如下：</span></span><br><span class="line"><span class="comment">// f ---&gt; Function.prototype ---&gt; Object.prototype ---&gt; null</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用构造器创建的对象"><a href="#使用构造器创建的对象" class="headerlink" title="使用构造器创建的对象"></a>使用构造器创建的对象</h3><p>在 JavaScript 中，构造器其实就是一个普通的函数。当使用 [new 操作符] 来作用这个函数时，它就可以被称为构造方法（构造函数）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Graph</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">vertices</span> = [];</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">edges</span> = [];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Graph</span>.<span class="property"><span class="keyword">prototype</span></span> = &#123;</span><br><span class="line">  <span class="attr">addVertex</span>: <span class="keyword">function</span>(<span class="params">v</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">vertices</span>.<span class="title function_">push</span>(v);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> g = <span class="keyword">new</span> <span class="title class_">Graph</span>();</span><br><span class="line"><span class="comment">// g 是生成的对象，他的自身属性有 &#x27;vertices&#x27; 和 &#x27;edges&#x27;。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-Object-create-创建的对象"><a href="#使用-Object-create-创建的对象" class="headerlink" title="使用 Object.create 创建的对象"></a>使用 Object.create 创建的对象</h3><p>ECMAScript 5 中引入了一个新方法：[<code>Object.create()</code>]。可以调用这个方法来创建一个新对象。新对象的原型就是调用 create 方法时传入的第一个参数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = &#123;<span class="attr">a</span>: <span class="number">1</span>&#125;;</span><br><span class="line"><span class="comment">// a ---&gt; Object.prototype ---&gt; null</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> b = <span class="title class_">Object</span>.<span class="title function_">create</span>(a);</span><br><span class="line"><span class="comment">// b ---&gt; a ---&gt; Object.prototype ---&gt; null</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b.<span class="property">a</span>); <span class="comment">// 1 (继承而来)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-class-关键字创建的对象"><a href="#使用-class-关键字创建的对象" class="headerlink" title="使用 class 关键字创建的对象"></a>使用 class 关键字创建的对象</h3><p>ECMAScript6 引入了一套新的关键字用来实现 [class]。使用基于类语言的开发人员会对这些结构感到熟悉，但它们是不同的。JavaScript 仍然基于原型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">```javascript</span><br><span class="line">class Animal &#123;</span><br><span class="line">  constructor(name) &#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">  &#125;</span><br><span class="line">  sayName() &#123;</span><br><span class="line">    console.log(&#x27;My name is &#x27; + this.name);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Cat extends Animal &#123;</span><br><span class="line">  constructor(name, color) &#123;</span><br><span class="line">    super(name);</span><br><span class="line">    this.color = color;</span><br><span class="line">  &#125;</span><br><span class="line">  sayColor() &#123;</span><br><span class="line">    console.log(&#x27;My color is &#x27; + this.color);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const garfield = new Cat(&#x27;Garfield&#x27;, &#x27;orange&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p><code>在上述代码中，使用 class 关键字定义了 Animal 和 Cat 两个类，分别用来创建 Animal 和 Cat 对象。通过使用 extends 关键字实现了 Cat 对象继承 Animal 对象的属性和方法。</code></p>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p>在遍历原型链上查找属性比较耗时，对性能有副作用。</p>
+<p>但是<code>hasOwnProperty</code> 是 JavaScript 中唯一一个处理属性并且<strong>不会</strong>遍历原型链的方法。</p>
+<blockquote>
+<p>注意：检查属性是否为 [<code>undefined</code>] 是<strong>不能够</strong>检查其是否存在的。该属性可能已存在，但其值恰好被设置成了 <code>undefined</code>。</p>
+</blockquote>
+<h3 id="错误实践：扩展原生对象的原型"><a href="#错误实践：扩展原生对象的原型" class="headerlink" title="错误实践：扩展原生对象的原型"></a>错误实践：扩展原生对象的原型</h3><p>经常使用的一个错误实践是扩展 <code>Object.prototype</code> 或其他内置原型。</p>
+<p>这种技术被称为猴子补丁并且会破坏封装。尽管一些流行的框架（如 Prototype.js）在使用该技术，但仍然没有足够好的理由使用附加的非标准方法来混入内置原型。</p>
+<p>扩展内置原型的<strong>唯一</strong>理由是支持 JavaScript 引擎的新特性。</p>
+
+</article>
     
+    
+</div>
+<div id="post-next-prev" class="row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            Other Articles
+            <span data-number="02"></span>
+        </h5>
+    </div>
     
         <div class="col-lg-6">
     <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
@@ -466,40 +474,6 @@
     </div>
 </div>
     
-        <div class="col-lg-6">
-    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
-        <a href="/2023/03/24/%E4%B8%8D%E8%A6%81%E4%B9%B1%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E4%BA%86/" class="trm-cover-frame trm-anima-link">
-            
-            
-                <img alt="cover" class="no-fancybox" src="/./../images/a008.png">
-            
-        </a>
-        
-        <div class="trm-card-descr">
-            <div class="trm-label trm-category trm-mb-20">
-                <a href=" /categories/javascript/">
-                    javascript
-                </a>
-            </div>
-            <h5>
-                <a href="/2023/03/24/%E4%B8%8D%E8%A6%81%E4%B9%B1%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E4%BA%86/" class="trm-anima-link">
-                    不要乱用原型创建对象了
-                </a>
-            </h5>
-            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-            <ul class="trm-card-data trm-label">
-                <li>23/03/24</li>
-                <li>15:25</li>
-                
-                    <li>729</li>
-                
-                
-                    <li>3</li>
-                
-            </ul>
-        </div>
-    </div>
-</div>
     
         <div class="col-lg-6">
     <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
@@ -536,188 +510,10 @@
     </div>
 </div>
     
-        <div class="col-lg-6">
-    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
-        <a href="/2023/03/24/%E9%9D%A2%E8%AF%95%E5%8F%88%E6%9D%A5%E9%97%AE%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%BA%86/" class="trm-cover-frame trm-anima-link">
-            
-            
-                <img alt="cover" class="no-fancybox" src="/./../images/a011.png">
-            
-        </a>
-        
-        <div class="trm-card-descr">
-            <div class="trm-label trm-category trm-mb-20">
-                <a href=" /categories/Javascript/">
-                    Javascript
-                </a>
-            </div>
-            <h5>
-                <a href="/2023/03/24/%E9%9D%A2%E8%AF%95%E5%8F%88%E6%9D%A5%E9%97%AE%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%BA%86/" class="trm-anima-link">
-                    前端面试又来问原型继承
-                </a>
-            </h5>
-            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-            <ul class="trm-card-data trm-label">
-                <li>23/03/24</li>
-                <li>10:30</li>
-                
-                    <li>434</li>
-                
-                
-                    <li>1</li>
-                
-            </ul>
-        </div>
-    </div>
 </div>
-    
-        <div class="col-lg-6">
-    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
-        <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E8%AE%A9%E4%BD%A0%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82%E9%97%AD%E5%8C%85-%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/" class="trm-cover-frame trm-anima-link">
-            
-            
-                <img alt="cover" class="no-fancybox" src="/./../images/a006.png">
-            
-        </a>
-        
-        <div class="trm-card-descr">
-            <div class="trm-label trm-category trm-mb-20">
-                <a href=" /categories/Javascript/">
-                    Javascript
-                </a>
-            </div>
-            <h5>
-                <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E8%AE%A9%E4%BD%A0%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82%E9%97%AD%E5%8C%85-%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/" class="trm-anima-link">
-                    前端面试最喜欢问的闭包
-                </a>
-            </h5>
-            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-            <ul class="trm-card-data trm-label">
-                <li>23/03/24</li>
-                <li>10:30</li>
-                
-                    <li>1.3k</li>
-                
-                
-                    <li>5</li>
-                
-            </ul>
-        </div>
-    </div>
-</div>
-    
-        <div class="col-lg-6">
-    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
-        <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E8%A7%A3%E9%87%8A%E6%B8%85%E6%A5%9Ajavascript%E4%B8%AD%E7%9A%84this-%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/" class="trm-cover-frame trm-anima-link">
-            
-            
-                <img alt="cover" class="no-fancybox" src="/./../images/a004.png">
-            
-        </a>
-        
-        <div class="trm-card-descr">
-            <div class="trm-label trm-category trm-mb-20">
-                <a href=" /categories/Javascript/">
-                    Javascript
-                </a>
-            </div>
-            <h5>
-                <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E8%A7%A3%E9%87%8A%E6%B8%85%E6%A5%9Ajavascript%E4%B8%AD%E7%9A%84this-%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/" class="trm-anima-link">
-                    解释javascript中的this
-                </a>
-            </h5>
-            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-            <ul class="trm-card-data trm-label">
-                <li>23/03/24</li>
-                <li>10:30</li>
-                
-                    <li>693</li>
-                
-                
-                    <li>2</li>
-                
-            </ul>
-        </div>
-    </div>
-</div>
-    
-        <div class="col-lg-6">
-    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
-        <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E6%90%9E%E6%87%82%E5%89%8D%E7%AB%AF%E5%B8%B8%E7%94%A8%E7%9A%84%E9%98%B2%E6%8A%96%E5%92%8C%E8%8A%82%E6%B5%81%E5%87%BD%E6%95%B0-%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/" class="trm-cover-frame trm-anima-link">
-            
-            
-                <img alt="cover" class="no-fancybox" src="/./../images/a003.png">
-            
-        </a>
-        
-        <div class="trm-card-descr">
-            <div class="trm-label trm-category trm-mb-20">
-                <a href=" /categories/Javascript/">
-                    Javascript
-                </a>
-            </div>
-            <h5>
-                <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E6%90%9E%E6%87%82%E5%89%8D%E7%AB%AF%E5%B8%B8%E7%94%A8%E7%9A%84%E9%98%B2%E6%8A%96%E5%92%8C%E8%8A%82%E6%B5%81%E5%87%BD%E6%95%B0-%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/" class="trm-anima-link">
-                    javascript中常用的防抖和节流函数
-                </a>
-            </h5>
-            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-            <ul class="trm-card-data trm-label">
-                <li>23/03/24</li>
-                <li>10:30</li>
-                
-                    <li>486</li>
-                
-                
-                    <li>1</li>
-                
-            </ul>
-        </div>
-    </div>
-</div>
-    
-        <div class="col-lg-6">
-    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
-        <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82javascript%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E9%98%B2%E6%8A%96%E5%92%8C%E8%8A%82%E6%B5%81%E5%87%BD%E6%95%B0/" class="trm-cover-frame trm-anima-link">
-            
-            
-                <img alt="cover" class="no-fancybox" src="/./../images/a002.png">
-            
-        </a>
-        
-        <div class="trm-card-descr">
-            <div class="trm-label trm-category trm-mb-20">
-                <a href=" /categories/Javascript/">
-                    Javascript
-                </a>
-            </div>
-            <h5>
-                <a href="/2023/03/24/%E4%B8%80%E7%AF%87%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82javascript%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E9%98%B2%E6%8A%96%E5%92%8C%E8%8A%82%E6%B5%81%E5%87%BD%E6%95%B0/" class="trm-anima-link">
-                    一篇彻底搞懂javascript中常用的防抖和节流函数
-                </a>
-            </h5>
-            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
-            <ul class="trm-card-data trm-label">
-                <li>23/03/24</li>
-                <li>10:30</li>
-                
-                    <li>474</li>
-                
-                
-                    <li>1</li>
-                
-            </ul>
-        </div>
-    </div>
-</div>
-    
-</div>
-<!-- newest publications end -->
 
+    
 
-    <div class="trm-pagination">
-        <span class="page-number current">1</span>
-    </div>
 
 
                     <div class="trm-divider footer-divider"></div>
@@ -764,6 +560,10 @@
             <!-- body end -->
 
             <div class="trm-fixed-container" data-scroll data-scroll-sticky data-scroll-target=".locomotive-scroll__sticky-target" data-scroll-offset="-10">
+    
+        <div class="trm-fixed-btn" data-title="Read Mode" onclick="asyncFun.switchReadMode()">
+            <i class="iconfont fas fa-book-reader"></i>
+        </div>
     
     
     <div id="trm-back-top" class="trm-fixed-btn" data-title="Back To Top">
@@ -822,6 +622,10 @@
     
 
     <!-- 评论插件 -->
+    
+        
+
+        
     
 
 

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="历史原因很长一段时间，JavaScript 都没有语言级（language-level）模块语法。早期的项目也比较简单也比较小，所以那时是没有“模块化”的思想的。那带来的问题是：  命名冲突：在全局命名空间下定义的变量容易造成命名冲突，这会导致代码出现错误或者不可预测的行为。 依赖管理：代码的依赖关系很难清晰地描述，这会导致代码的可维护性和可扩展性变得非常差。 文件加载：在一个大型的JavaScr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CommonJS、AMD、UMD、ES6模块规范的历史发展进程和区别">
+<meta property="og:url" content="http://example.com/2023/03/24/CommonJS%E3%80%81AMD%E3%80%81UMD%E3%80%81ES6%E6%A8%A1%E5%9D%97%E8%A7%84%E8%8C%83%E7%9A%84%E5%8E%86%E5%8F%B2%E5%8F%91%E5%B1%95%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:site_name" content="Kara">
+<meta property="og:description" content="历史原因很长一段时间，JavaScript 都没有语言级（language-level）模块语法。早期的项目也比较简单也比较小，所以那时是没有“模块化”的思想的。那带来的问题是：  命名冲突：在全局命名空间下定义的变量容易造成命名冲突，这会导致代码出现错误或者不可预测的行为。 依赖管理：代码的依赖关系很难清晰地描述，这会导致代码的可维护性和可扩展性变得非常差。 文件加载：在一个大型的JavaScr">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-24T07:25:47.335Z">
+<meta property="article:modified_time" content="2023-03-24T07:40:52.386Z">
+<meta property="article:author" content="Kara">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="大前端">
+<meta name="twitter:card" content="summary">
+
+    <meta name="keywords" content="前端面试 javascript 模块规范">
+
+
+<title >CommonJS、AMD、UMD、ES6模块规范的历史发展进程和区别</title>
+
+<!-- Favicon -->
+
+    <link href='/img/favicon.svg?v=2.0.4' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/img/favicon.svg?v=2.0.4' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css">
+
+    
+<link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+    
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"example.com","author":"Kara","root":"/","typed_text":["一只在追光的攻城狮~","时而奋勇 时而沉静~"],"theme_version":"2.0.4","theme":{"switch":true,"default":"auto"},"favicon":{"logo":"/img/favicon.svg","icon16":"/img/favicon.svg","icon32":"/img/favicon.svg","appleTouchIcon":null,"webmanifest":null,"visibilitychange":true,"hidden":"/failure.ico","showText":"(/≧▽≦/)咦！又好了！","hideText":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms","author":"Post author: ","copyright_link":"Post link: ","copyright_license_title":"Copyright Notice: ","copyright_license_content":"All articles in this blog are licensed under undefined unless otherwise stated.","copy_success":"Copied","copy_failure":"Copy failed","open_read_mode":"Enter reading mode","exit_read_mode":"Exit reading mode","notice_outdate_message":"It has been undefined days since the last update, the content of the article may be outdated.","just":"Just","min":"minutes ago","hour":"hours ago","day":"days ago","month":"months ago"},"swup":false,"plugin":{"flickr_justified_gallery":"https://unpkg.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"far fa-sun","moon":"far fa-moon","play":"fas fa-play","email":"far fa-envelope","next":"fas fa-arrow-right","calendar":"far fa-calendar-alt","clock":"far fa-clock","user":"far fa-user","back_top":"fas fa-arrow-up","close":"fas fa-times","search":"fas fa-search","reward":"fas fa-hand-holding-usd","user_tag":"fas fa-user-alt","toc_tag":"fas fa-th-list","read":"fas fa-book-reader","arrows":"fas fa-arrows-alt-h","double_arrows":"fas fa-angle-double-down","copy":"fas fa-copy"},"icontype":"font","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":true,"title":"default","height_limit":200},"search":{"enable":true,"type":"local","href":"https://www.google.com/search?q=site:","domain":null,"path":"search.xml"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2023-03-24 15:40:52"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.0.4" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+ 
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Kara" type="application/atom+xml">
+</head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><i class="iconfont far fa-sun"></i></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><i class="iconfont far fa-moon"></i></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" data-scroll-container style="opacity: 0">
+          <div data-scroll-section id="content" class="trm-scroll-section">
+
+            <div class="locomotive-scroll__sticky-target" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none;"></div>
+
+            <!-- top bar -->
+            <header class="trm-top-bar" data-scroll data-scroll-sticky data-scroll-target=".locomotive-scroll__sticky-target" data-scroll-offset="-10">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+        <img alt="logo" src="/img/favicon.svg">
+    
+    
+        <div class="trm-logo-text">
+            珈梨<span>的秘密</span>
+        </div>
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    home
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a data-no-swup href="/about/" target="">
+                    about
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a data-no-swup href="/notes/" target="">
+                    notes
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a data-no-swup href="/archives/" target="">
+                    archives
+                </a>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+    <!-- mode switcher place -->
+    <div class="trm-mode-switcher-place">
+        <div class="trm-mode-switcher">
+            <i class="iconfont far fa-sun"></i>
+            <input class="tgl tgl-light" id="trm-swich" type="checkbox">
+            <label class="trm-swich" for="trm-swich"></label>
+            <i class="iconfont far fa-moon"></i>
+        </div>
+    </div>
+    <!-- mode switcher place end -->
+
+			
+    
+    <div id="trm-search-btn" class="trm-search-btn">
+        <i class="iconfont fas fa-search"></i>
+    </div>
+     
+
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner" data-scroll data-scroll-direction="vertical">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" data-scroll data-scroll-direction="vertical" data-scroll-speed="-3" src="/images/banner9.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container" data-scroll data-scroll-direction="vertical" data-scroll-speed="0">
+            <div class="row">
+                
+                <div class="col-lg-4"></div>
+                
+                <div class="col-lg-8">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            CommonJS、AMD、UMD、ES6模块规范的历史发展进程和区别
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        2023
+                                    </span
+                                ></li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <a href="#about-triger" data-scroll-to="#about-triger" data-scroll-offset="-130" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </a>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+                <div id="page-sidebar" class="col-lg-4 hidden-sm">
+                    <!-- main card -->
+                    
+
+<div class="trm-main-card-frame trm-sidebar">
+    <div class="trm-main-card" data-scroll data-scroll-repeat data-scroll-sticky data-scroll-target=".locomotive-scroll__sticky-target" data-scroll-offset="60"> 
+    
+        <!-- card header -->
+<div class="trm-mc-header">
+    <div class="trm-avatar-frame trm-mb-20">
+        <img alt="Avatar" class="trm-avatar" src="/img/avatar.jpg">
+    </div>
+    <h5 class="trm-name trm-mb-15">
+        I&#39;m Kara
+    </h5>
+    
+        <div class="trm-label">
+            我
+            <span class="trm-typed-text">
+                <!-- Words for theme.user.typedText -->
+            </span>
+        </div>
+    
+</div>
+<!-- card header end -->
+        <!-- sidebar social -->
+
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<div class="trm-social">
+    
+        <a href="https://github.com/KaraKong/" title="github" rel="nofollow" target="_blank">
+            <i class="iconfont fab fa-github"></i>
+        </a>
+    
+        <a href="https://twitter.com/karakong" title="twitter" rel="nofollow" target="_blank">
+            <i class="iconfont fab fa-twitter"></i>
+        </a>
+    
+        <a href="https://discord.gg/WHgWyYFD" title="twitter" rel="nofollow" target="_blank">
+            <i class="iconfont fab fa-discord"></i>
+        </a>
+    
+</div>
+
+<!-- sidebar social end -->
+        <!-- info -->
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<ul class="trm-table trm-mb-20">
+    
+        <li>
+            <div class="trm-label">
+                RESIDENCE:
+            </div>
+            <div class="trm-label trm-label-light">
+                Mars
+            </div>
+        </li>
+    
+        <li>
+            <div class="trm-label">
+                CITY:
+            </div>
+            <div class="trm-label trm-label-light">
+                ShangHai
+            </div>
+        </li>
+    
+        <li>
+            <div class="trm-label">
+                AGE:
+            </div>
+            <div class="trm-label trm-label-light">
+                Secret
+            </div>
+        </li>
+    
+        <li>
+            <div class="trm-label">
+                WECHAT:
+            </div>
+            <div class="trm-label trm-label-light">
+                shareKK
+            </div>
+        </li>
+    
+</ul>
+<!-- info end -->
+
+        
+    <div class="trm-divider trm-mb-40 trm-mt-40"></div>
+    <!-- action button -->
+    <div class="text-center">
+        <a href="mailto:744634534@qq.com" class="trm-btn">
+            Contact Me
+            <i class="iconfont far fa-envelope"></i>
+        </a>
+    </div>
+    <!-- action button end -->
+
+    
+    </div>
+</div>
+                    <!-- main card end -->
+                </div>
+            
+            <div id="page-content" class="col-lg-8">
+                <div class="trm-content" id="trm-content">
+                    <div data-scroll data-scroll-repeat data-scroll-offset="500" id="about-triger"></div>
+
+                    <div id="post-info" class="row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-calendar-alt trm-icon"></i><br>
+            03/24
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-clock trm-icon"></i><br>
+            15:25
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <i class="iconfont far fa-user trm-icon"></i><br>
+            Kara
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <h2 id="历史原因"><a href="#历史原因" class="headerlink" title="历史原因"></a>历史原因</h2><p>很长一段时间，JavaScript 都没有语言级（language-level）模块语法。早期的项目也比较简单也比较小，所以那时是没有“模块化”的思想的。那带来的问题是：</p>
+<ol>
+<li><strong>命名冲突</strong>：在全局命名空间下定义的变量容易造成命名冲突，这会导致代码出现错误或者不可预测的行为。</li>
+<li><strong>依赖管理</strong>：代码的依赖关系很难清晰地描述，这会导致代码的可维护性和可扩展性变得非常差。</li>
+<li><strong>文件加载</strong>：在一个大型的JavaScript应用程序中，可能会有成百上千个文件需要加载，这会导致应用程序的加载时间变得非常长。</li>
+<li><strong>可读性</strong>：在没有模块化的情况下，代码的结构和组织很难理解，这会降低代码的可读性和可维护性。</li>
+</ol>
+<blockquote>
+<p>因此，模块化编程规范的出现，可以解决上述问题，使得javaScript应用程序更加易于开发、维护和扩展。</p>
+</blockquote>
+<h2 id="各模块化编程规范的发展"><a href="#各模块化编程规范的发展" class="headerlink" title="各模块化编程规范的发展"></a>各模块化编程规范的发展</h2><h3 id="JavaScript模块（2006年）"><a href="#JavaScript模块（2006年）" class="headerlink" title="JavaScript模块（2006年）"></a>JavaScript模块（2006年）</h3><p>JavaScript模块的概念早在2006年就被提出来了，但当时没有任何官方的规范。这个时期，开发者们通常使<strong>用命名空间来</strong>避免全局变量的污染，但这种方式难以管理和维护。</p>
+<h3 id="CommonJS规范（2009年）"><a href="#CommonJS规范（2009年）" class="headerlink" title="CommonJS规范（2009年）"></a>CommonJS规范（2009年）</h3><p>2009年，Node.js的出现催生了CommonJS规范的诞生。CommonJS规范定义了一个标准的模块格式，使得JavaScript代码可以更好地组织和共享。这个规范包含了模块的定义、引入和导出方式，以及模块的生命周期管理等内容。</p>
+<p>在CommonJS规范中，每个模块都被视为一个独立的作用域，它可以通过“require”函数来引入其他模块，并通过“exports”对象来导出自己的内容。这个规范被广泛用于Node.js中，也被其他JavaScript运行时环境所采用。</p>
+<blockquote>
+<p>在 Node.js 环境下，CommonJS 规范是内置的，不需要额外的库，<code>require</code>函数是由 Node.js 实现的。Node.js 中的require<code>函数可以加载本地文件和第三方模块，加载的模块可以通过</code>module.exports` 导出数据。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// math.js</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">add</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">subtract</span>(<span class="params">a, b</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> a - b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  add,</span><br><span class="line">  subtract</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在另一个模块中，可以使用“require”函数引入该模块并使用其公开的函数和变量，如下所示：</p>
+<p>javascript</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app.js</span></span><br><span class="line"><span class="keyword">const</span> math = <span class="built_in">require</span>(<span class="string">&#x27;./math.js&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(math.<span class="title function_">add</span>(<span class="number">1</span>, <span class="number">2</span>)); <span class="comment">// 输出 3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(math.<span class="title function_">subtract</span>(<span class="number">3</span>, <span class="number">2</span>)); <span class="comment">// 输出 1</span></span><br></pre></td></tr></table></figure>
+
+<p>这样，就可以将代码分解为多个模块，并将这些模块导入到一个主文件中。这种模块化的方式使得代码更易于维护和扩展，同时避免了全局变量的命名冲突。</p>
+<h3 id="AMD规范（2011年）"><a href="#AMD规范（2011年）" class="headerlink" title="AMD规范（2011年）"></a>AMD规范（2011年）</h3><p>AMD（Asynchronous Module Definition）规范是一种用于浏览器端的模块规范。它与CommonJS规范不同的是，它支持异步加载模块，避免了阻塞浏览器的问题。</p>
+<p>在AMD规范中，模块的定义和导入使用的是“define”函数，这个函数可以异步地加载模块，并在模块加载完成后执行回调函数。AMD规范被广泛用于浏览器端的JavaScript模块化开发。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义dog.js</span></span><br><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;狗狗&quot;</span>)</span><br><span class="line"><span class="keyword">return</span> &#123;</span><br><span class="line"><span class="attr">say</span>: <span class="function">() =&gt;</span> <span class="string">&quot;我是一条狗&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 定义main.js</span></span><br><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span></span>) &#123;</span><br><span class="line"><span class="keyword">var</span> dog = <span class="built_in">require</span>(<span class="string">&#x27;./dog&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(dog.<span class="title function_">say</span>())</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// index.html引用</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;https://cdn.bootcss.com/require.js/2.3.6/require.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">// main.js在当前目录</span><br><span class="line">requirejs([&quot;main&quot;])</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>在使用模块时，需要使用 <code>require</code> 函数来异步加载模块，并在回调函数中使用模块。例如：</p>
+<blockquote>
+<p>在浏览器环境下，通常使用 AMD 规范或 ES6 规范进行模块化开发。浏览器中的 <code>require</code> 函数需要通过第三方库实现，如 RequireJS 就是一个比较流行的实现 AMD 规范的库。</p>
+</blockquote>
+<p>在浏览器中使用 AMD 规范时，需要引入 RequireJS 这个库，RequireJS 可以在浏览器中实现 AMD 规范。</p>
+<h3 id="UMD规范-（2012年）"><a href="#UMD规范-（2012年）" class="headerlink" title="UMD规范 （2012年）"></a>UMD规范 （2012年）</h3><p>UMD规范是一种用于编写通用模块的规范，它可以兼容CommonJS、AMD和全局变量等多种模块化方案。 下面是一个使用UMD规范的示例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span> (<span class="params">root, factory</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> define === <span class="string">&#x27;function&#x27;</span> &amp;&amp; define.<span class="property">amd</span>) &#123;</span><br><span class="line">        <span class="comment">// AMD</span></span><br><span class="line">        <span class="title function_">define</span>([<span class="string">&#x27;jquery&#x27;</span>], factory);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">exports</span> === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">        <span class="comment">// Node, CommonJS-like</span></span><br><span class="line">        <span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title function_">factory</span>(<span class="built_in">require</span>(<span class="string">&#x27;jquery&#x27;</span>));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Browser globals (root is window)</span></span><br><span class="line">        root.<span class="property">returnExports</span> = <span class="title function_">factory</span>(root.<span class="property">jQuery</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;(<span class="variable language_">this</span>, <span class="keyword">function</span> (<span class="params">$</span>) &#123;</span><br><span class="line">    <span class="comment">// 方法定义</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">myFunc</span>(<span class="params"></span>) &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 暴露接口</span></span><br><span class="line">    <span class="keyword">return</span> myFunc;</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>这个示例使用了一个自执行函数，这个函数首先检查当前环境支持哪种模块化方案，然后根据情况将模块公开。在函数的最后，返回了要暴露的函数。</p>
+<p>总之，UMD规范为JavaScript模块化提供了更多的灵活性和兼容性，使得开发者可以在不同的环境中使用相同的代码。</p>
+<h3 id="ES6模块规范（2015年）"><a href="#ES6模块规范（2015年）" class="headerlink" title="ES6模块规范（2015年）"></a>ES6模块规范（2015年）</h3><p>ES6（ECMAScript 2015）是JavaScript的一个重要版本，它引入了许多新特性，其中包括了一种新的模块规范。ES6模块规范定义了一种新的模块格式，它可以在浏览器和Node.js中使用。</p>
+<p>ES Module是一种在<strong>语言层面上支持的模块化规范</strong>，也是ES6（ECMAScript 2015）规范中新增的一项功能。ES Module的主要目的是让JavaScript在不同的环境中实现更加高效、可靠和安全的模块化。</p>
+<p>ES Module的语法使用了import和export关键字来定义和导出模块，示例如下：</p>
+<p>javascript</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模块定义</span></span><br><span class="line"><span class="comment">// 定义一个默认导出</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Hello from module!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义命名导出</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">foo</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Hello from foo!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">bar</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Hello from bar!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模块导入</span></span><br><span class="line"><span class="keyword">import</span> myModule, &#123; foo, bar &#125; <span class="keyword">from</span> <span class="string">&#x27;./my-module.js&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">myModule</span>(); <span class="comment">// 输出 &quot;Hello from module!&quot;</span></span><br><span class="line"><span class="title function_">foo</span>(); <span class="comment">// 输出 &quot;Hello from foo!&quot;</span></span><br><span class="line"><span class="title function_">bar</span>(); <span class="comment">// 输出 &quot;Hello from bar!&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，我们定义了一个默认导出和两个命名导出，并通过import语句导入了模块，并分别调用了其中的函数。</p>
+<p><strong>ES Module相较于CommonJS和AMD等模块化规范具有以下优势</strong>：</p>
+<ol>
+<li>编译时静态分析：ES Module在编译时可以进行静态分析，这意味着可以在代码执行前检查模块依赖关系，从而提高代码的性能和可靠性。</li>
+<li>单独的命名空间：ES Module中每个模块都有自己独立的命名空间，避免了命名冲突和全局变量污染的问题。</li>
+<li>非循环依赖：ES Module支持非循环依赖，避免了CommonJS中存在的循环依赖问题。</li>
+</ol>
+<p>需要注意的是，ES6是JavaScript语言的一个版本，而ES Module是其中的一项功能，因此它们之间有密切的关系。在ES6中引入了ES Module规范，使得JavaScript在语言层面上支持模块化，使得开发者可以更加方便地管理和组织代码。</p>
+<h2 id="模块化时代，最受欢迎的webpack"><a href="#模块化时代，最受欢迎的webpack" class="headerlink" title="模块化时代，最受欢迎的webpack"></a>模块化时代，最受欢迎的webpack</h2><p>webpack和requirejs不一样的地方是，webpack在编译时确定了入口文件及文件的依赖关系，通过解析文件按文件依赖关系进行打包，webpack可以把es6的模块化代码，打包成AMD，UMD，可以直接查看<a href="https://link.zhihu.com/?target=https://webpack.js.org/configuration/output/%23outputlibrarytarget">https://<strong>webpack.js.org/configur</strong>ation/output/#outputlibrarytarget</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&#x27;./example/entry.js&#x27;</span>,</span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;main.js&#x27;</span>,</span><br><span class="line">    <span class="attr">path</span>: path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">    <span class="attr">library</span>: <span class="string">&#x27;MyLibrary&#x27;</span>,</span><br><span class="line">    <span class="attr">libraryTarget</span>: <span class="string">&#x27;amd&#x27;</span>   <span class="comment">//commonjs，commonjs2， window，amd, global,</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+</article>
+    
+    
+</div>
+<div id="post-next-prev" class="row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            Other Articles
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
+        <a href="/2023/03/24/%E4%B8%8D%E8%A6%81%E4%B9%B1%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E4%BA%86/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="/./../images/a008.png">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/javascript/">
+                    javascript
+                </a>
+            </div>
+            <h5>
+                <a href="/2023/03/24/%E4%B8%8D%E8%A6%81%E4%B9%B1%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E4%BA%86/" class="trm-anima-link">
+                    不要乱用原型创建对象了
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>23/03/24</li>
+                <li>15:25</li>
+                
+                    <li>729</li>
+                
+                
+                    <li>3</li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation" data-scroll data-scroll-offset="40">
+        <a href="/2023/03/24/%E9%9D%A2%E8%AF%95%E5%8F%88%E6%9D%A5%E9%97%AE%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%BA%86/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="/./../images/a011.png">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/Javascript/">
+                    Javascript
+                </a>
+            </div>
+            <h5>
+                <a href="/2023/03/24/%E9%9D%A2%E8%AF%95%E5%8F%88%E6%9D%A5%E9%97%AE%E5%8E%9F%E5%9E%8B%E7%BB%A7%E6%89%BF%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%BA%86/" class="trm-anima-link">
+                    前端面试又来问原型继承
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>23/03/24</li>
+                <li>10:30</li>
+                
+                    <li>434</li>
+                
+                
+                    <li>1</li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</div>
+
+    
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-scroll-animation" data-scroll data-scroll-offset="50">
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>© 2023- 2023</span>
+            <span class="footer-separator"data-separator=" · "></span>
+            <span class="trm-accent-color">I'm Kara</span>
+        </div>
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.2
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                Theme - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.0.4
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+ 
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            <div class="trm-fixed-container" data-scroll data-scroll-sticky data-scroll-target=".locomotive-scroll__sticky-target" data-scroll-offset="-10">
+    
+        <div class="trm-fixed-btn" data-title="Read Mode" onclick="asyncFun.switchReadMode()">
+            <i class="iconfont fas fa-book-reader"></i>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="Back To Top">
+        <i class="iconfont fas fa-arrow-up"></i>
+    </div>
+</div>
+          </div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+
+  </div>
+  <!-- app wrapper end -->
+
+  
+<div class="trm-search-popup">
+    <div class="trm-search-header">
+        <span class="trm-search-popup-btn-close">
+            <i class="iconfont fas fa-times"></i>
+        </span>
+    </div>
+    <div class="form trm-search-form">
+        <input class="trm-search-input" type="text" placeholder="Searching...">
+    </div>
+    <div class="trm-search-result-container">
+
+    </div>
+</div>
+
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://unpkg.com/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+
+    
+<script src="https://unpkg.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.0.4"></script>
+    
+
+    
+        
+<script src="https://unpkg.com/hexo-generator-searchdb@1.4.0/dist/search.js"></script>
+
+        <script src="/js/plugins/local_search.js?v=2.0.4"></script>
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+    <script data-swup-reload-script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+
+
+<script id="async-script" src="/js/main.js?v=2.0.4"></script>
+
+</body>
+
+</html>
