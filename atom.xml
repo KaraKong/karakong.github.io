@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2023-03-24T07:41:27.890Z</updated>
+  <updated>2023-04-06T09:34:46.173Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://example.com/2023/04/06/%E5%AE%9D%E8%97%8F%E5%B0%8F%E6%B8%B8%E6%88%8F%E8%AE%A9%E4%BD%A0/"/>
+    <id>http://example.com/2023/04/06/%E5%AE%9D%E8%97%8F%E5%B0%8F%E6%B8%B8%E6%88%8F%E8%AE%A9%E4%BD%A0/</id>
+    <published>2023-04-06T09:34:53.922Z</published>
+    <updated>2023-04-06T09:34:46.173Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="宝藏小游戏让你分分钟学会git"><a href="#宝藏小游戏让你分分钟学会git" class="headerlink" title="宝藏小游戏让你分分钟学会git"></a>宝藏小游戏让你分分钟学会git</h2><p>今天发下一个宝藏小游戏，让你轻轻松松学会Git，Learning Git Branching” 可以说是目前为止最好的教程了，在沙盒里你能执行相应的命令，还能看到每个命令的执行情况；最主要的是它有相关动图实时预览，让你明明白白得弄清楚git得各个提交及分支情况，关键还有闯关游戏，一下午没干活，竟玩游戏了~~哈哈哈</p><p>快来试试吧：<a href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a></p><p><img src="https://img.tditor.com/image-c447ddfc23be455e80ab3ff6cfa7450e.png" alt="a55990aec8c1564e8d5574638ac9aad.png" loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;宝藏小游戏让你分分钟学会git&quot;&gt;&lt;a href=&quot;#宝藏小游戏让你分分钟学会git&quot; class=&quot;headerlink&quot; title=&quot;宝藏小游戏让你分分钟学会git&quot;&gt;&lt;/a&gt;宝藏小游戏让你分分钟学会git&lt;/h2&gt;&lt;p&gt;今天发下一个宝藏小游戏，让你轻轻松松</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>微前端之乾坤 入门到源码简析</title>
